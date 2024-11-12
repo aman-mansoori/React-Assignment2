@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Practical Questions</title>
+    <link rel="stylesheet" href="style.css"> <!-- Linking to external CSS file -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Task 6: Retrieve and Display Data -->
+    <section id="apiSection">
+        <h2>Retrieve and Display Data from Public API</h2>
+        <button id="fetchData">Fetch Books</button>
+        <ul id="dataList"></ul>
+    </section>
+
+    <!-- Task 7: Autocomplete Search -->
+    <section id="autocompleteSection">
+        <h2>Autocomplete Search</h2>
+        <input type="text" id="searchInput" placeholder="Start typing...">
+        <ul id="suggestions"></ul>
+    </section>
+
+    <!-- Task 8: Real-time Chat Application -->
+    <section id="chatSection">
+        <h2>Real-time Chat</h2>
+        <div id="chatBox"></div>
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button id="sendMessage">Send</button>
+    </section>
+
+    <!-- Task 9: Load More Button -->
+    <section id="loadMoreSection">
+        <h2>Load More Button</h2>
+        <ul id="itemList"></ul>
+        <button id="loadMore">Load More</button>
+    </section>
+
+    <!-- Task 10: Weather App -->
+    <section id="weatherSection">
+        <h2>Weather App</h2>
+        <input type="text" id="cityInput" placeholder="Enter city">
+        <button id="getWeather">Get Weather</button>
+        <div id="weatherInfo"></div>
+    </section>
+
+    <script>
+        // Task 6: Retrieve Data from Public API (e.g., Open Library API for Books)
+        $('#fetchData').click(function() {
+            $.ajax({
+                url: 'https://openlibrary.org/subjects/science_fiction.json',
+                type: 'GET',
+                success: function(data) {
+                    const books = data.works;
+                    $('#dataList').empty();
+                    books.forEach(book => {
+                        $('#dataList').append('<li>' + book.title + '</li>');
+                    });
+                }
+            });
+        });
+
+        // Task 7: Autocomplete Search Feature
+        $('#searchInput').on('input', function() {
+            const query = $(this).val();
+            if (query.length > 2) {
+                $.ajax({
+                    url: 'https://api.tvmaze.com/search/shows?q=' + query,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#suggestions').empty();
+                        data.forEach(item => {
+                            $('#suggestions').append('<li>' + item.show.name + '</li>');
+                        });
+                    }
+                });
+            } else {
+                $('#suggestions').empty();
+            }
+        });
+
+        // Task 8: Real-time Chat Application (Simplified for demo purposes)
+        $('#sendMessage').click(function() {
+            const message = $('#messageInput').val();
+            if (message) {
+                $('#chatBox').append('<div>' + message + '</div>');
+                $('#messageInput').val(''); // Clear the input
+            }
+        });
+
+        // Task 9: Load More Button with Pagination
+        let page = 1;
+        $('#loadMore').click(function() {
+            $.ajax({
+                url: 'https://jsonplaceholder.typicode.com/posts?_page=' + page + '&_limit=5',
+                type: 'GET',
+                success: function(data) {
+                    data.forEach(post => {
+                        $('#itemList').append('<li>' + post.title + '</li>');
+                    });
+                    page++;
+                }
+            });
+        });
+
+        // Task 10: Weather App (Using OpenWeatherMap API)
+        $('#getWeather').click(function() {
+            const city = $('#cityInput').val();
+            if (city) {
+                $.ajax({
+                    url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=YOUR_API_KEY&units=metric`,
+                    type: 'GET',
+                    success: function(data) {
+                        const weatherInfo = `
+                            <p>Temperature: ${data.main.temp}°C</p>
+                            <p>Weather: ${data.weather[0].description}</p>
+                            <img src="https://openweathermap.org/img/w/${data.weather[0].icon}.png">
+                        `;
+                        $('#weatherInfo').html(weatherInfo);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
