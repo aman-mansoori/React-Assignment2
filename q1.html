@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Practical Questions</title>
+    <link rel="stylesheet" href="q1.css"> <!-- Linking the external CSS file -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Task 1: Simple HTML Form with Validation -->
+    <section id="formSection">
+        <h2>Form with Name and Email Validation</h2>
+        <form id="myForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <input type="submit" value="Submit">
+        </form>
+    </section>
+
+    <!-- Task 2: Dropdown Menus for States and Cities -->
+    <section id="dropdownSection">
+        <h2>Dynamic State and City Dropdowns</h2>
+        <label for="state">Select State:</label>
+        <select id="state">
+            <option value="">Select a state</option>
+            <option value="GA">Gujarat</option>
+            <option value="JM">Jammu and Kashmir</option>
+            <option value="GO">Goa</option>
+        </select><br><br>
+
+        <label for="city">Select City:</label>
+        <select id="city">
+            <option value="">Select a city</option>
+        </select>
+    </section>
+
+    <!-- Task 3: Toggle Div Visibility -->
+    <section id="toggleSection">
+        <h2>Toggle Visibility of a Div</h2>
+        <button id="toggleButton">Show/Hide Div</button>
+        <div id="myDiv">
+            <p>This is a toggleable div!</p>
+        </div>
+    </section>
+
+    <!-- Task 4: Image Slider -->
+    <section id="sliderSection">
+        <h2>Image Slider</h2>
+        <div id="slider">
+            <img src="image1.jpeg" alt="Image 1">
+            <img src="image2.jpeg" alt="Image 2">
+            <img src="image3.jpeg" alt="Image 3">
+        </div>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+    </section>
+
+    <!-- Task 5: Client-side Validation -->
+    <section id="validationSection">
+        <h2>Client-side Validation for Empty Field</h2>
+        <form id="validationForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+            <span id="error" class="error">This field is required.</span><br><br>
+
+            <input type="submit" value="Submit">
+        </form>
+    </section>
+
+    <script>
+        // Task 1: Form Validation
+        $('#myForm').submit(function(event) {
+            event.preventDefault();
+            var name = $('#name').val();
+            var email = $('#email').val();
+
+            if (name && email) {
+                alert("Name: " + name + "\nEmail: " + email);
+            } else {
+                alert("Please fill in all fields.");
+            }
+        });
+
+        // Task 2: Dynamic Dropdown for State and Cities
+        const citiesByState = {
+            "GA": ["Surat", "Rajkot", "Navsari"],
+            "JM": ["Srinagar", "Anantnag", "Rajouri"],
+            "GO": ["Panaji", "Margao", "Calangute"]
+        };
+
+        $('#state').change(function() {
+            const selectedState = $(this).val();
+            const cities = citiesByState[selectedState] || [];
+            
+            $('#city').empty().append('<option value="">Select a city</option>');
+            cities.forEach(function(city) {
+                $('#city').append('<option value="' + city + '">' + city + '</option>');
+            });
+        });
+
+        // Task 3: Toggle Div Visibility
+        $('#toggleButton').click(function() {
+            $('#myDiv').toggle(); // Show/Hide the div
+        });
+
+        // Task 4: Image Slider
+        let currentIndex = 0;
+        const images = $('#slider img');
+
+        function showImage(index) {
+            images.hide();
+            images.eq(index).show();
+        }
+
+        $('#next').click(function() {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        });
+
+        $('#prev').click(function() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        });
+
+        // Task 5: Client-side Validation
+        $('#validationForm').submit(function(event) {
+            event.preventDefault();
+            const username = $('#username').val();
+
+            if (!username) {
+                $('#error').show();
+            } else {
+                $('#error').hide();
+                alert("Form submitted successfully!");
+            }
+        });
+    </script>
+</body>
+</html>
